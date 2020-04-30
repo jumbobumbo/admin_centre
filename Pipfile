@@ -9,6 +9,11 @@ verify_ssl = true
 pathlib = "*"
 dirsync = "*"
 requests = "*"
+certifi = "*"
+chardet = "*"
+idna = "*"
+six = "*"
+urllib3 = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
