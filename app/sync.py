@@ -26,10 +26,10 @@ parser.add_argument("conf_file",
 parser.add_argument("sync_keys",
                     type=str,
                     help="the relevant DIR keys from the json file:\n"
-                    "comma space seperated strings: just, like, this "
+                    "comma space seperated strings: just,like,this"
                     )
 
 # start sync
 args = parser.parse_args()
-args.sync_keys = args.sync_keys.split(", ")
+args.sync_keys = args.sync_keys.split(",")
 FFS(args.ip_port, args.sync_img, args.conf_file).notify_sync(args.sync_keys)

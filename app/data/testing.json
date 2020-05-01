@@ -1,6 +1,9 @@
 {
     "local": {
-        "/home/jumbo/Documents/testing/t1": "/home/jumbo/Documents/testing/t1_d",
-        "/home/jumbo/Documents/minecraft1": "/home/jumbo/Documents/test1"
+        "/hostfs/Documents/testing/t1": "/hostfs/Documents/testing/t1_d",
+        "/hostfs/Documents/minecraft1": "/hostfs/Documents/test1"
+    },
+    "local2": {
+        "/hostfs/Documents/minecraft1": "/hostfs/Documents/test1"
     }
 }

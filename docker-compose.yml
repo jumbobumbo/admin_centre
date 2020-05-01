@@ -1,0 +1,10 @@
+version: "3"
+
+services: 
+    syncer:
+        container_name: notify_sync
+        image: py38_slim_sync
+        volumes:
+            - /home/jumbo:/hostfs
+            - /media:/target
+        command: python3 app/sync.py ${IP} ${PATTERN} ${CONF} ${KEY}
