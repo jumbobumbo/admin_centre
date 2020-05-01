@@ -22,7 +22,7 @@ class FileSync:
         self.conf_data = JSONReads(Path(mod_path, "data", conf_file)).data_return()
         self.sync_complete_no = 0
 
-    def syncer(self, sync_keys: list, regex: str = r".+\.(txt|log|git|jar)$"):
+    def syncer(self, sync_keys: list, regex: str = r".+\.(log|git|jar)$"):
         """
         loops through nested key (source), value (dest) pairs under 'sync_key' key.
         param: sync_keys - keys from dict - target sync DIRs ["key1", "key2"]
@@ -100,7 +100,7 @@ class FlaskFileSync(FileSync):
         if not img_load_success and not sync_complete:
             raise Exception(f"Everything is dead @ {datetime.now().strftime('%d/%m/%Y, %H:%M:%S')}")
 
-    def notify_sync(self, sync_keys: list, regex: str = r".+\.(txt|log|git|jar)$"):
+    def notify_sync(self, sync_keys: list, regex: str = r".+\.(log|git|jar)$"):
         """
         uses FileSync.syncer for the syncing, wraps the pi communication around the outside
         param: sync_keys - keys from dict - target sync DIRs ["key1", "key2"]
