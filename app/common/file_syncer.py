@@ -14,7 +14,7 @@ from common.json_reader import JSONReads
 mod_path = Path(__file__).parent.parent
 
 # default regex
-d_reg = r".+\.(log|git|jar|lastfm|imdb|lyricfind|localmedia|thetvdb)*.$"
+d_reg = r".+\.(log|git|jar)$"
 
 
 class FileSync:
