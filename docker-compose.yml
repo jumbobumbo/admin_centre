@@ -2,7 +2,7 @@ version: "3"
 
 services: 
     syncer:
-        container_name: notify_sync
+        container_name: notify_sync_${KEY}
         image: py38_slim_sync
         volumes:
             - /home/jumbo:/hostfs

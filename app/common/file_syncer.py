@@ -13,6 +13,9 @@ from common.json_reader import JSONReads
 # parent DIR to common /app
 mod_path = Path(__file__).parent.parent
 
+# default regex
+d_reg = r".+\.(log|git|jar|lastfm|imdb|lyricfind|localmedia|thetvdb)$"
+
 
 class FileSync:
     def __init__(self, conf_file: str = "backup_conf.json"):
@@ -22,7 +25,7 @@ class FileSync:
         self.conf_data = JSONReads(Path(mod_path, "data", conf_file)).data_return()
         self.sync_complete_no = 0
 
-    def syncer(self, sync_keys: list, regex: str = r".+\.(log|git|jar)$"):
+    def syncer(self, sync_keys: list, regex: str = d_reg):
         """
         loops through nested key (source), value (dest) pairs under 'sync_key' key.
         param: sync_keys - keys from dict - target sync DIRs ["key1", "key2"]
@@ -100,7 +103,7 @@ class FlaskFileSync(FileSync):
         if not img_load_success and not sync_complete:
             raise Exception(f"Everything is dead @ {datetime.now().strftime('%d/%m/%Y, %H:%M:%S')}")
 
-    def notify_sync(self, sync_keys: list, regex: str = r".+\.(log|git|jar)$"):
+    def notify_sync(self, sync_keys: list, regex: str = d_reg):
         """
         uses FileSync.syncer for the syncing, wraps the pi communication around the outside
         param: sync_keys - keys from dict - target sync DIRs ["key1", "key2"]
