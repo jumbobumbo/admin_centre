@@ -8,6 +8,6 @@
         "/hostfs/terraria": "/target/3tbred/backups/terraria"
     },
     "plex": {
-        "/hostfs/plex": "/target/3tbred/backups/plex"
+        "/hostfs/plex": "/target/plex_backup"
     }
 }

@@ -5,5 +5,11 @@
     },
     "local2": {
         "/hostfs/Documents/minecraft1": "/hostfs/Documents/test1"
+    },
+    "local3": {
+        "/home/jumbo/Documents/plex": "/home/jumbo/Documents/plex_test"
+    },
+    "local4": {
+        "/hostfs/Documents/plex": "/hostfs/Documents/plex_test"
     }
 }
