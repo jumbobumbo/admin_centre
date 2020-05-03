@@ -7,4 +7,5 @@ services:
         volumes:
             - /home/jumbo:/hostfs
             - /media:/target
+            - ./app/output:/app/output
         command: python3 app/sync.py ${IP} ${PATTERN} ${CONF} ${KEY}

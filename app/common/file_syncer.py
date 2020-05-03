@@ -22,7 +22,8 @@ class FileSync:
         """
         param: conf_file - config file (json) - must exist in /data DIR
         """
-        self.conf_data = JSONReads(Path(mod_path, "data", conf_file)).data_return()
+        self.conf_data = JSONReads(
+            Path(mod_path, "data", conf_file)).data_return()
         self.sync_complete_no = 0
 
     def syncer(self, sync_keys: list, regex: str = d_reg):
@@ -77,31 +78,53 @@ class FlaskFileSync(FileSync):
         self.sync_img = JSONReads(Path("app", "data", sync_img)).data_return()
         super().__init__(conf_file=conf_file)
 
-    def _post_actions(self, img_load_success: bool, sync_complete: bool):
+    def _post_actions(self, img_load_success: bool, sync_complete: bool, sync_keys: list):
         """
         This is what we do when syncing is 'finished' (failure or success)
         If flask is working, we stop the rotation animation during syncing and set the screen red or green
         Otherwise we log what we can
         param: img_load_success - can we talk to flask and load an image on the sense hat
         param: sync_complete - successful syncing or not
+        param: sync_keys - keys from dict - target sync DIRs ["key1", "key2"]
         """
+        sync_keys = str(sync_keys)  # typecast for possible later logging
+
+        # function for saving failure file
+        def write_f(fname): return open(Path(mod_path, "output", fname), "w")
+
+        # function for stipping unwanted chars
+        def strip_char(chars): return chars.translate(
+            {ord(c): None for c in "'[],"}).translate({ord(c): "_" for c in " :/"}
+                                                      )
+
+        # current date time
+        dtn = datetime.now().strftime('%d/%m/%Y, %H:%M:%S')
+
         if img_load_success:
             # stop the spinning animation from during sync
             r_post(f"http://{self.pi_ip_port}/post_rotation/",
-                   json={"cmd": "kill"})
+                   json={"cmd": "kill"}
+                   )
 
             if sync_complete:  # set green - everything good
                 r_post(f"http://{self.pi_ip_port}/post-set-img/",
-                       json={"base": [0, 120, 0]})
+                       json={"base": [0, 120, 0]}
+                       )
             else:  # set red - something went wrong
                 r_post(f"http://{self.pi_ip_port}/post-set-img/",
-                       json={"base": [200, 0, 0]})
+                       json={"base": [200, 0, 0]}
+                       )
+                # create failure file
+                with write_f(f"{strip_char(sync_keys)}_sync_failed_at_{strip_char(dtn)}"): pass
 
         if sync_complete and not img_load_success:
-            print(f"pi may be dead, but the sync completed @ {datetime.now().strftime('%d/%m/%Y, %H:%M:%S')}")
+            print(f"pi may be dead, but the sync completed @ {dtn}")
+            with write_f(f"pi_dead_at_{strip_char(dtn)}"): pass
 
         if not img_load_success and not sync_complete:
-            raise Exception(f"Everything is dead @ {datetime.now().strftime('%d/%m/%Y, %H:%M:%S')}")
+            # create failure file
+            with write_f(f"{strip_char(sync_keys)}_sync_and_pi_failed_at_{strip_char(dtn)}"): pass
+            raise Exception(f"Everything is dead @ {dtn}")
 
     def notify_sync(self, sync_keys: list, regex: str = d_reg):
         """
@@ -117,11 +140,13 @@ class FlaskFileSync(FileSync):
             ]
             for cmd in img_cmds:  # send each command
                 post_data = r_post(
-                    f"http://{self.pi_ip_port}/{cmd['command']}/", json=cmd['data'])
+                    f"http://{self.pi_ip_port}/{cmd['command']}/", json=cmd['data']
+                )
                 # verify it was accepted (http response 200)
                 if findall(r"\[(.*?)\]", str(post_data))[0] != "200":
                     raise ValueError(f"flask has not accepted one of the following:\ncommand page: {cmd['command']}\n \
-                                     or the data input: {cmd['data']}")
+                                     or the data input: {cmd['data']}"
+                                     )
 
             img_load_success = True
 
@@ -142,4 +167,4 @@ class FlaskFileSync(FileSync):
         sync_complete = True if total_completed_syncs == self.sync_complete_no else False
 
         # post actions for flask
-        self._post_actions(img_load_success, sync_complete)
+        self._post_actions(img_load_success, sync_complete, sync_keys)
