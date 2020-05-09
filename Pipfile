@@ -6,14 +6,14 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-pathlib = "*"
-dirsync = "*"
-requests = "*"
-certifi = "*"
-chardet = "*"
-idna = "*"
-six = "*"
-urllib3 = "*"
+pathlib = "==1.0.1"
+dirsync = "==2.2.4"
+requests = "==2.23.0"
+certifi = "==2020.4.5.1"
+chardet = "==3.0.4"
+idna = "==2.9"
+six = "==1.14.0"
+urllib3 = "==1.25.9"
 
 [requires]
 python_version = "3.8"
