@@ -1,0 +1,16 @@
+{
+    "pi":{
+        "ip": "192.168.1.155",
+        "port": "8082",
+        "orientation": 270
+    },
+    "servers": {
+        "jumbodocker" : "192.168.1.38",
+        "am1nas": "192.168.1.174"
+    },
+    "alert_conf": {
+        "text_color": [0, 50, 50],
+        "back_color": [200, 0, 0],
+        "scroll": 0.1
+    }
+}

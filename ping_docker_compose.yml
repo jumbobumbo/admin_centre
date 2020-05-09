@@ -1,0 +1,7 @@
+version: "3"
+
+services: 
+    pinger:
+        container_name: status_checker
+        image: py38_slim_sync
+        command: python3 app/ping.py
