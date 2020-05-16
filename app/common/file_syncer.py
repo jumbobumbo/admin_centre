@@ -4,6 +4,7 @@ from re import findall
 from threading import Thread
 from threading import enumerate as t_enumerate
 from sys import path as syspath
+from time import sleep
 
 from dirsync import sync
 from requests import post as r_post
@@ -110,6 +111,12 @@ class FlaskFileSync(FileSync):
                 r_post(f"http://{self.pi_ip_port}/post-set-img/",
                        json={"base": [0, 120, 0]}
                        )
+                # wait so it catches my eye
+                sleep(2)
+                # reset display to default temp display
+                r_post(f"http://{self.pi_ip_port}/show_temp/"
+                       )
+
             else:  # set red - something went wrong
                 r_post(f"http://{self.pi_ip_port}/post-set-img/",
                        json={"base": [200, 0, 0]}
