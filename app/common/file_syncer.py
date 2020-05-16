@@ -8,6 +8,7 @@ from time import sleep
 
 from dirsync import sync
 from requests import post as r_post
+from requests import get as r_get
 
 from common.json_reader import JSONReads
 
@@ -114,7 +115,7 @@ class FlaskFileSync(FileSync):
                 # wait so it catches my eye
                 sleep(2)
                 # reset display to default temp display
-                r_post(f"http://{self.pi_ip_port}/show_temp/"
+                r_get(f"http://{self.pi_ip_port}/show_temp/"
                        )
 
             else:  # set red - something went wrong
