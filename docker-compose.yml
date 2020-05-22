@@ -8,4 +8,5 @@ services:
             - /home/jumbo:/hostfs
             - /media:/target
             - ./app/output:/app/output
+            - ./app/data:/app/data
         command: python3 app/sync.py ${IP} ${PATTERN} ${CONF} ${KEY}
