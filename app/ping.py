@@ -50,13 +50,13 @@ def server_status(key: str = "servers", re_try_max: int = 3) -> list:
             if attempt_no < re_try_max:
                 return _pinger(ip, attempt_no + 1)
             else:
-                return "unresponsive"
+                return 1
 
     # populated if servers dont respond to pings
     return_list = []
 
     for key, value in conf_file[key].items():
-        if _pinger(value, 1) == "unresponsive":
+        if _pinger(value, 1) == 1:
             return_list.append(key)
 
     return return_list
