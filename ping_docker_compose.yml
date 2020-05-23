@@ -4,4 +4,6 @@ services:
     pinger:
         container_name: status_checker
         image: py38_slim_sync
+        volumes:
+            - ./app/data:/app/data
         command: python3 app/ping.py ${IP} ${PORT}
