@@ -27,19 +27,36 @@ parser.add_argument("port",
                     help="port the pi is listening on"
                     )
 
+def server_status(key: str = "servers", re_try_max: int = 3) -> list:
+    """
+    Returns a list of servers which haven't responding to a ping within the retry limit
 
-def server_status(key: str = "servers") -> list:
+    Arguments:
+        return_list {list} -- the list to return when finished.
+        This allows easy recursion whilst retaining previous values.
+        Providing a blank list by default should suit most usage scenarios.
+
+    Keyword Arguments:
+        key {str} -- dict key to servers you want to check (default: {"servers"})
+        re_try_max {int} -- max number of ping retries till server is marked as down (default: {3})
+
+    Returns:
+        list -- list of servers that are not responding to pings
     """
-    returns a list of servers which haven't responded to a ping
-    reads values from 'conf_file'
-    param: key: - str - key for servers in conf file - defaults to 'servers'
-    returns - list
-    """
+    def _pinger(ip: str, attempt_no: int):
+        resp = system(f"ping -c 1 {ip}")
+        # Zero is the only acceptable response to a ping
+        if resp != 0:
+            if attempt_no < re_try_max:
+                return _pinger(ip, attempt_no + 1)
+            else:
+                return "unresponsive"
+
+    # populated if servers dont respond to pings
     return_list = []
 
-    # Zero is the only acceptable response to a ping
     for key, value in conf_file[key].items():
-        if system(f"ping -c 1 {value}") != 0:
+        if _pinger(value, 1) == "unresponsive":
             return_list.append(key)
 
     return return_list
