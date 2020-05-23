@@ -1,6 +1,6 @@
 version: "3"
 
-services: 
+services:
     syncer:
         container_name: notify_sync_${KEY}
         image: py38_slim_sync

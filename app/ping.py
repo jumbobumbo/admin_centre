@@ -1,5 +1,6 @@
 from os import system
 from pathlib import Path
+from argparse import ArgumentParser
 
 from requests import post
 
@@ -10,6 +11,21 @@ mod_path = Path(__file__).parent
 
 # get json config file
 conf_file = JSONReads(Path(mod_path, "data", "ping_conf.json")).data_return()
+
+# cmd line args
+parser = ArgumentParser(description="args for ping verification",
+                        usage="sync.py uri port\n"
+                              "example args:'192.168.1.155' '8082'"
+                        )
+
+parser.add_argument("uri",
+                    type=str,
+                    help="IP or URL of rasp pi (for displaying notification)"
+                    )
+parser.add_argument("port",
+                    type=str,
+                    help="port the pi is listening on"
+                    )
 
 
 def server_status(key: str = "servers") -> list:
@@ -29,21 +45,23 @@ def server_status(key: str = "servers") -> list:
     return return_list
 
 
-def post_pi(alert_list: list, repeat_count: int = 2, key_pi: str = "pi", key_alert: str = "alert_conf"):
+def post_pi(alert_list: list, uri: str, port: str, repeat_count: int = 2, key_pi: str = "pi", key_alert: str = "alert_conf"):
     """
     Sends alert (post list items and colours) to rasp pi sense hat
 
     Arguments:
         alert_list {list} -- strings you wish to display on the pi screen
+        uri {str} -- IP or URL of rasp pi (for displaying notification)
+        port {str} -- port the pi is listening on
 
     Keyword Arguments:
         repeat_count {int} -- how many times do you want me to cycle over the alerts? (default: {2})
-        key_pi {str} -- required key from conf_file (default: {"pi"})
+        key_pi {str} -- required key from conf_file, contains default pi info (default: {"pi"})
         key_alert {str} -- required key from conf_file (default: {"alert_conf"})
     """
 
     # address to post to
-    pi_addr = f"http://{conf_file[key_pi]['ip']}:{conf_file[key_pi]['port']}"
+    pi_addr = f"http://{uri}:{port}"
 
     # set the orientation of the display (refer to 'sense_my_pihat' repo)
     post(f"{pi_addr}/post_orientation/", json=conf_file[key_pi]["orientation"])
@@ -57,6 +75,8 @@ def post_pi(alert_list: list, repeat_count: int = 2, key_pi: str = "pi", key_ale
 
 
 if __name__ == "__main__":
+    args = parser.parse_args()
+
     offline_servers = server_status()
     if offline_servers:
-        post_pi(offline_servers)
+        post_pi(offline_servers, args.uri, args.port)
