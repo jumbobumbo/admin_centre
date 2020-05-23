@@ -29,12 +29,7 @@ parser.add_argument("port",
 
 def server_status(key: str = "servers", re_try_max: int = 3) -> list:
     """
-    Returns a list of servers which haven't responding to a ping within the retry limit
-
-    Arguments:
-        return_list {list} -- the list to return when finished.
-        This allows easy recursion whilst retaining previous values.
-        Providing a blank list by default should suit most usage scenarios.
+    Returns a list of servers which haven't responded to a ping within the retry limit
 
     Keyword Arguments:
         key {str} -- dict key to servers you want to check (default: {"servers"})
